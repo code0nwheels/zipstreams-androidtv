@@ -1,5 +1,8 @@
 name: Publish release APK
 
+permissions:
+  contents: write
+
 on:
   push:
     tags:
@@ -35,7 +38,7 @@ jobs:
           keyStorePassword: ${{ secrets.KEY_STORE_PASS }}
           keyPassword: ${{ secrets.KEY_STORE_PASS }}
         env:
-          BUILD_TOOLS_VERSION: "31.0.0"  # Updated to use build-tools 31.0.0
+          BUILD_TOOLS_VERSION: "31.0.0"
 
       - name: Create GitHub Release
         id: create_release
