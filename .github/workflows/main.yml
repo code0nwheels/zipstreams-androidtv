@@ -22,6 +22,9 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x ./gradlew
 
+      - name: List installed Android build tools versions
+        run: ls $ANDROID_HOME/build-tools
+
       - name: Generate signed APK
         run: ./gradlew assembleRelease --stacktrace
 
@@ -35,7 +38,7 @@ jobs:
           keyStorePassword: ${{ secrets.KEY_STORE_PASS }}
           keyPassword: ${{ secrets.KEY_STORE_PASS }}
         env:
-          BUILD_TOOLS_VERSION: "30.0.2"
+          BUILD_TOOLS_VERSION: "31.0.0"
 
       - name: Upload release APK
         uses: actions/upload-artifact@v2
