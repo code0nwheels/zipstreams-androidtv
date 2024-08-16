@@ -41,24 +41,12 @@ jobs:
           keyPassword: ${{ secrets.KEY_STORE_PASS }}
           zipAlign: true
 
-      - name: Create GitHub Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+      - name: SFTP Sync
+        uses: swillner/sftp-sync-action@v1.0
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          body: "Release of the signed and zipaligned APK"
-          draft: false
-          prerelease: false
-
-      - name: Upload Release Asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: app/build/outputs/apk/release/ZipStreams.apk  # Adjust if needed based on output
-          asset_name: ZipStreams-signed.apk
-          asset_content_type: application/vnd.android.package-archive
+          server: ${{ secrets.SFTP_SERVER }}
+          user: ${{ secrets.SFTP_USER }}
+          user_private_key: ${{ secrets.SFTP_PRIVATE_KEY }}
+          host_public_key: ${{ secrets.SFTP_HOST_PUBLIC_KEY }} # Optional, include if needed for verification
+          local: "app/build/outputs/apk/release/ZipStreams.apk" # Path to your APK
+          remote: "/var/www/html/apk/" # Remote directory where the APK should be uploaded
