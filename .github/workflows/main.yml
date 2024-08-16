@@ -44,6 +44,9 @@ jobs:
           keyPassword: ${{ secrets.KEY_STORE_PASS }}
           zipAlign: true
       
+      - name: Debug Signed APK Path
+        run: echo "Signed APK path: ${{ steps.sign_apk.outputs.signedReleaseFile }}"
+      
       - name: Extract Version Number
         id: get_version
         run: |
