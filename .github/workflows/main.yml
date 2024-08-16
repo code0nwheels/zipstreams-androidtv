@@ -23,7 +23,7 @@ jobs:
       - name: Set up JDK 11
         uses: actions/setup-java@v4.2.2
         with:
-          java-version: 11
+          java-version: '11'
           distribution: 'temurin'
 
       - name: Grant execute permission for gradlew
@@ -38,7 +38,7 @@ jobs:
         id: sign_apk
         uses: tiann/zipalign-sign-android-release@v1.1.4
         with:
-          releaseDirectory: app/release
+          releaseDirectory: 'app/release'
           signingKeyBase64: ${{ secrets.KEY_STORE }}
           alias: ${{ secrets.KEY_STORE_ALIAS }}
           keyStorePassword: ${{ secrets.KEY_STORE_PASS }}
@@ -46,7 +46,8 @@ jobs:
           zipAlign: true
       
       - name: Debug Signed APK Path
-        run: echo "Signed APK path: ${{ steps.sign_apk.outputs.signedReleaseFile }}"
+        run: |
+          echo "Signed APK path: ${{ steps.sign_apk.outputs.signedReleaseFile }}"
       
       - name: Extract Version Number
         id: get_version
@@ -55,9 +56,9 @@ jobs:
           echo "VERSION_NAME=${VERSION_NAME}" >> $GITHUB_ENV
 
       - name: Create Version File
-        run: echo ${{ env.VERSION_NAME }} > latest-version.txt
+        run: echo "${{ env.VERSION_NAME }}" > latest-version.txt
 
-      - name: SFTP Remote
+      - name: SFTP Remote - Upload APK
         uses: wearesection/sftp-remote@1.0.1
         with:
           host: ${{ secrets.SFTP_SERVER }}
@@ -65,7 +66,7 @@ jobs:
           localPath: "${{ steps.sign_apk.outputs.signedReleaseFile }}"
           remotePath: "/var/www/html/apk/ZipStreams.apk" 
           privateKey: ${{ secrets.SFTP_PRIVATE_KEY }} 
-          privateKeyIsFile: false 
+          privateKeyIsFile: 'false'
       
       - name: SFTP Upload Version File
         uses: wearesection/sftp-remote@1.0.1
@@ -75,4 +76,4 @@ jobs:
           localPath: "./latest-version.txt" 
           remotePath: "/var/www/html/apk/latest-version" 
           privateKey: ${{ secrets.SFTP_PRIVATE_KEY }} 
-          privateKeyIsFile: false 
+          privateKeyIsFile: 'false'
