@@ -40,6 +40,15 @@ jobs:
           keyStorePassword: ${{ secrets.KEY_STORE_PASS }}
           keyPassword: ${{ secrets.KEY_STORE_PASS }}
           zipAlign: true
+      
+      - name: Extract Version Number
+        id: get_version
+        run: |
+          VERSION_NAME=$(grep "versionName" app/build.gradle | awk '{print $2}' | tr -d '"' | tr -d ',')
+          echo "VERSION_NAME=${VERSION_NAME}" >> $GITHUB_ENV
+
+      - name: Create Version File
+        run: echo ${{ env.VERSION_NAME }} > latest-version.txt
 
       - name: SFTP Remote
         uses: wearesection/sftp-remote@1.0.1
@@ -48,5 +57,15 @@ jobs:
           username: ${{ secrets.SFTP_USER }}
           localPath: "./app/release/ZipStreams.apk" # Path to your APK
           remotePath: "/var/www/html/apk/ZipStreams.apk" # Remote directory and filename
+          privateKey: ${{ secrets.SFTP_PRIVATE_KEY }} # Optional, use if using key-based authentication
+          privateKeyIsFile: false # Set to true if the private key is stored as a file
+      
+      - name: SFTP Upload Version File
+        uses: wearesection/sftp-remote@1.0.1
+        with:
+          host: ${{ secrets.SFTP_SERVER }}
+          username: ${{ secrets.SFTP_USER }}
+          localPath: "./latest-version.txt" 
+          remotePath: "/var/www/html/apk/latest-version" # Remote directory and filename
           privateKey: ${{ secrets.SFTP_PRIVATE_KEY }} # Optional, use if using key-based authentication
           privateKeyIsFile: false # Set to true if the private key is stored as a file
