@@ -58,7 +58,7 @@ jobs:
         with:
           host: ${{ secrets.SFTP_SERVER }}
           username: ${{ secrets.SFTP_USER }}
-          localPath: "./app/release/ZipStreams.apk" 
+          localPath: "${{ steps.sign_apk.outputs.signedReleaseFile }}"
           remotePath: "/var/www/html/apk/ZipStreams.apk" 
           privateKey: ${{ secrets.SFTP_PRIVATE_KEY }} 
           privateKeyIsFile: false 
