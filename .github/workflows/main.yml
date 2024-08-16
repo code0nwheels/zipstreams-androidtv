@@ -35,6 +35,7 @@ jobs:
         run: ./gradlew assembleRelease --stacktrace
 
       - name: ZipAlign & Sign APK
+        id: sign_apk
         uses: tiann/zipalign-sign-android-release@v1.1.4
         with:
           releaseDirectory: app/release
