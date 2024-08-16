@@ -5,9 +5,12 @@ permissions:
 
 on:
   push:
-    tags:
-      - '*'
-  workflow_dispatch:
+    branches:
+      - main  
+  pull_request:
+    branches:
+      - main  
+  workflow_dispatch: 
 
 jobs:
   package-release-apk:
@@ -55,10 +58,10 @@ jobs:
         with:
           host: ${{ secrets.SFTP_SERVER }}
           username: ${{ secrets.SFTP_USER }}
-          localPath: "./app/release/ZipStreams.apk" # Path to your APK
-          remotePath: "/var/www/html/apk/ZipStreams.apk" # Remote directory and filename
-          privateKey: ${{ secrets.SFTP_PRIVATE_KEY }} # Optional, use if using key-based authentication
-          privateKeyIsFile: false # Set to true if the private key is stored as a file
+          localPath: "./app/release/ZipStreams.apk" 
+          remotePath: "/var/www/html/apk/ZipStreams.apk" 
+          privateKey: ${{ secrets.SFTP_PRIVATE_KEY }} 
+          privateKeyIsFile: false 
       
       - name: SFTP Upload Version File
         uses: wearesection/sftp-remote@1.0.1
@@ -66,6 +69,6 @@ jobs:
           host: ${{ secrets.SFTP_SERVER }}
           username: ${{ secrets.SFTP_USER }}
           localPath: "./latest-version.txt" 
-          remotePath: "/var/www/html/apk/latest-version" # Remote directory and filename
-          privateKey: ${{ secrets.SFTP_PRIVATE_KEY }} # Optional, use if using key-based authentication
-          privateKeyIsFile: false # Set to true if the private key is stored as a file
+          remotePath: "/var/www/html/apk/latest-version" 
+          privateKey: ${{ secrets.SFTP_PRIVATE_KEY }} 
+          privateKeyIsFile: false 
