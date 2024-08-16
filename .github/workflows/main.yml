@@ -15,15 +15,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code for app release
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Set up JDK 11
-        uses: actions/setup-java@v1
+        uses: actions/setup-java@v3
         with:
           java-version: 11
 
       - name: Grant execute permission for gradlew
-        run: chmod +x ./gradlew
+        run: |
+          set -e
+          chmod +x ./gradlew
 
       - name: Generate signed APK
         run: ./gradlew assembleRelease --stacktrace
@@ -38,13 +40,13 @@ jobs:
           keyStorePassword: ${{ secrets.KEY_STORE_PASS }}
           keyPassword: ${{ secrets.KEY_STORE_PASS }}
         env:
-          BUILD_TOOLS_VERSION: "31.0.0"
+          BUILD_TOOLS_VERSION: "35.0.0"  # Update if needed
 
       - name: Create GitHub Release
         id: create_release
         uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
         with:
           tag_name: ${{ github.ref }}
           release_name: Release ${{ github.ref }}
@@ -55,9 +57,9 @@ jobs:
       - name: Upload Release Asset
         uses: actions/upload-release-asset@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ${{steps.sign_app.outputs.signedReleaseFile}}
+          asset_path: ${{ steps.sign_app.outputs.signedReleaseFile }}
           asset_name: app-release-signed.apk
           asset_content_type: application/vnd.android.package-archive
