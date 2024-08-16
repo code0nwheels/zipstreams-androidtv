@@ -47,6 +47,5 @@ jobs:
           server: ${{ secrets.SFTP_SERVER }}
           user: ${{ secrets.SFTP_USER }}
           user_private_key: ${{ secrets.SFTP_PRIVATE_KEY }}
-          host_public_key: ${{ secrets.SFTP_HOST_PUBLIC_KEY }} # Optional, include if needed for verification
           local: "app/build/outputs/apk/release/ZipStreams.apk" # Path to your APK
           remote: "/var/www/html/apk/" # Remote directory where the APK should be uploaded
