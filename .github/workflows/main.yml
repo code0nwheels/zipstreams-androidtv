@@ -41,11 +41,12 @@ jobs:
           keyPassword: ${{ secrets.KEY_STORE_PASS }}
           zipAlign: true
 
-      - name: Upload APK via SFTP
-        uses: appleboy/scp-action@v0.1.6
+      - name: SFTP Remote
+        uses: wearesection/sftp-remote@1.0.1
         with:
           host: ${{ secrets.SFTP_SERVER }}
           username: ${{ secrets.SFTP_USER }}
-          key: ${{ secrets.SFTP_PRIVATE_KEY }}
-          source: "./app/release/ZipStreams.apk" # Path to your APK
-          target: "/var/www/html/apk/ZipStreams.apk" # Exact location where the APK should be uploaded
+          localPath: "./app/release/ZipStreams.apk" # Path to your APK
+          remotePath: "/var/www/html/apk/ZipStreams.apk" # Remote directory and filename
+          privateKey: ${{ secrets.SFTP_PRIVATE_KEY }} # Optional, use if using key-based authentication
+          privateKeyIsFile: false # Set to true if the private key is stored as a file
