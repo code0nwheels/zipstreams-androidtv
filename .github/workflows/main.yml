@@ -34,7 +34,7 @@ jobs:
       - name: ZipAlign & Sign APK
         uses: tiann/zipalign-sign-android-release@v1.1.4
         with:
-          releaseDirectory: app/build/outputs/apk/release
+          releaseDirectory: app/release
           signingKeyBase64: ${{ secrets.KEY_STORE }}
           alias: ${{ secrets.KEY_STORE_ALIAS }}
           keyStorePassword: ${{ secrets.KEY_STORE_PASS }}
@@ -47,5 +47,5 @@ jobs:
           server: ${{ secrets.SFTP_SERVER }}
           user: ${{ secrets.SFTP_USER }}
           user_private_key: ${{ secrets.SFTP_PRIVATE_KEY }}
-          local: "app/build/outputs/apk/release/ZipStreams.apk" # Path to your APK
+          local: "app/release/ZipStreams.apk" # Path to your APK
           remote: "/var/www/html/apk/" # Remote directory where the APK should be uploaded
